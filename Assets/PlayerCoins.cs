@@ -7,7 +7,7 @@ public class PlayerCoins : MonoBehaviour
     [SerializeField] private TextMeshProUGUI text;
 
     public void Start() {
-        Load();
+        //Load();
     }
 
     public void Increment() {
