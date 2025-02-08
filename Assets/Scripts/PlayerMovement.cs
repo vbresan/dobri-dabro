@@ -6,6 +6,7 @@ public class PlayerMovement : MonoBehaviour
 {
     private CharacterController characterController;
     
+    [SerializeField] private Transform playerCamera;
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask layerMask;
     [SerializeField] private float movementSpeed = 13;
@@ -15,15 +16,43 @@ public class PlayerMovement : MonoBehaviour
     private bool isGrounded = false;
     private Vector3 velocity;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
+    private void Crouch() {
+        
+        bool  isCrouching   = Input.GetKey(KeyCode.C);
+        float targetHeight  = isCrouching ? 1f : 2f;
+        float targetCameraY = isCrouching ? 0.85f : 1.7f;
+        float targetCenterY = isCrouching ? 0.5f : 1f;
+
+        characterController.height = Mathf.Lerp(
+            characterController.height,
+            targetHeight,
+            2 * Time.deltaTime
+        );
+        characterController.center = new Vector3(
+            0,
+            Mathf.Lerp(
+                characterController.center.y, 
+                targetCenterY, 
+                2 * Time.deltaTime
+            ),
+            0
+        );
+        playerCamera.localPosition = new Vector3(
+            0, 
+            Mathf.Lerp(
+                playerCamera.localPosition.y, 
+                targetCameraY, 
+                2 * Time.deltaTime
+            ),
+            0
+        );
+    }
+
+    void Start() {
         characterController = GetComponent<CharacterController>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
+    void Update() {
         float mouseX = Input.GetAxis("Horizontal");
         float mouseZ = Input.GetAxis("Vertical");
 
@@ -40,6 +69,8 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetButtonDown("Jump") && isGrounded) {
             velocity.y = Mathf.Sqrt(jumpHeight * -gravity);
         }
+
+        Crouch();
 
         characterController.Move(velocity * Time.deltaTime);
 
