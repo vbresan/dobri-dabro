@@ -45,14 +45,7 @@ public class Weapon : MonoBehaviour
 
     void PlaySoundEffect() {
 
-        GameObject  gameObject  = new GameObject("AK47 Single Shot Sound");
-        AudioSource audioSource = gameObject.AddComponent<AudioSource>();
-
-        audioSource.clip   = Resources.Load<AudioClip>("AK47SingleShot");
-        audioSource.pitch  = Random.Range(0.9f, 1.1f);
-        audioSource.volume = 1;
-        audioSource.Play();
-
-        Destroy(gameObject, audioSource.clip.length);
+        float pitch = Random.Range(0.8f, 1.2f);
+        AudioManager.PlaySound(Sounds.AK47SingleShot, 1f, pitch);
     }
 }
